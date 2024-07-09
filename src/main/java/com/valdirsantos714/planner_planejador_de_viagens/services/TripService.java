@@ -35,7 +35,6 @@ public class TripService {
             trip.setDestination(atualizedTrip.getDestination());
             trip.setStarts_at(atualizedTrip.getStarts_at());
             trip.setEnds_at(atualizedTrip.getEnds_at());
-            trip.set_confirmed(atualizedTrip.is_confirmed());
             trip.setOwner_name(atualizedTrip.getOwner_name());
             trip.setOwner_email(atualizedTrip.getOwner_email());
             save(trip);
@@ -66,4 +65,27 @@ public class TripService {
             return list;
         }
     }
+
+    public Trip confirmTrip(UUID id) {
+        Trip trip = findById(id);
+        if (trip.is_confirmed() == false) {
+            trip.set_confirmed(true);
+            save(trip);
+            return trip;
+        } else {
+            throw new RuntimeException("Erro! a viagem já está confirmada!");
+        }
+    }
+
+    public Trip cancelTrip(UUID id) {
+        Trip trip = findById(id);
+        if (trip.is_confirmed() == true) {
+            trip.set_confirmed(false);
+            save(trip);
+            return trip;
+        } else {
+            throw new RuntimeException("Erro! a viagem já está confirmada!");
+        }
+    }
+
 }

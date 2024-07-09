@@ -63,4 +63,28 @@ public class TripController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{id}/confirm")
+    public ResponseEntity confirmTrip(@PathVariable UUID id) {
+        var trip = service.findById(id);
+        if (trip != null) {
+            service.confirmTrip(id);
+            service.save(trip);
+            return ResponseEntity.ok(new TripPayloadResponse(trip));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/cancel")
+    public ResponseEntity cancelTrip(@PathVariable UUID id) {
+        var trip = service.findById(id);
+        if (trip != null) {
+            service.cancelTrip(id);
+            service.save(trip);
+            return ResponseEntity.ok(new TripPayloadResponse(trip));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

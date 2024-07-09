@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -37,6 +39,9 @@ public class Trip implements Serializable {
 
     @Column(nullable = false)
     private String owner_email;
+
+    @OneToMany(mappedBy = "trip")
+    private List<Participants> participantsList = new ArrayList<>();
 
     public Trip(TripPayload dto) {
         this.destination = dto.destination();
