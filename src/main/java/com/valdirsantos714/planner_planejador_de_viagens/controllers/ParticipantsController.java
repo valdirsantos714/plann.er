@@ -2,10 +2,7 @@ package com.valdirsantos714.planner_planejador_de_viagens.controllers;
 
 import com.valdirsantos714.planner_planejador_de_viagens.model.Participants;
 import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.ParticipantsPayload;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.ParticipantsPayloadResponse;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayload;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayloadResponse;
+import com.valdirsantos714.planner_planejador_de_viagens.payload.*;
 import com.valdirsantos714.planner_planejador_de_viagens.services.ParticipantsService;
 import com.valdirsantos714.planner_planejador_de_viagens.services.TripService;
 import jakarta.validation.Valid;
@@ -23,6 +20,9 @@ public class ParticipantsController {
 
     @Autowired
     private ParticipantsService service;
+
+    @Autowired
+    private TripService tripService;
 
     @GetMapping("/all")
     public ResponseEntity findAll() {

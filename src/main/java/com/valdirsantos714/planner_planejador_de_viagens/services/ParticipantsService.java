@@ -1,12 +1,15 @@
 package com.valdirsantos714.planner_planejador_de_viagens.services;
 
 import com.valdirsantos714.planner_planejador_de_viagens.model.Participants;
+import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
 import com.valdirsantos714.planner_planejador_de_viagens.repositories.ParticipantsRepository;
+import com.valdirsantos714.planner_planejador_de_viagens.repositories.TripRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +19,12 @@ public class ParticipantsService {
 
     @Autowired
     private ParticipantsRepository repository;
+
+    @Autowired
+    private TripService tripService;
+
+    @Autowired
+    private TripRepository tripRepository;
 
     public Participants save(Participants participant) {
         Participants newParticipant = repository.save(participant);
@@ -84,6 +93,15 @@ public class ParticipantsService {
         } else {
             throw new RuntimeException("Erro! a pessoa já está confirmada!");
         }
+    }
+
+    public Trip cadastrarNaTrip(Trip trip, List<Participants> participant) {
+        Trip atualizedTrip = tripService.findById(trip.getId());
+
+        trip.setParticipantsList(participant);
+        tripService.save(atualizedTrip);
+
+        return atualizedTrip;
     }
 
 }
