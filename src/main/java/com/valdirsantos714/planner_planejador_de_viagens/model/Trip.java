@@ -45,6 +45,10 @@ public class Trip implements Serializable {
     @OneToMany(mappedBy = "trip")
     private List<Participants> participantsList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "trip")
+    private List<Activities> activitiesList = new ArrayList<>();
+
     public Trip(TripPayload dto) {
         this.destination = dto.destination();
         this.starts_at = dto.starts_at();
