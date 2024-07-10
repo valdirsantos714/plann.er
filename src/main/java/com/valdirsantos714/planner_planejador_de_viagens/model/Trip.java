@@ -1,7 +1,6 @@
 package com.valdirsantos714.planner_planejador_de_viagens.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.ParticipantsTripPayload;
 import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayload;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,16 +52,8 @@ public class Trip implements Serializable {
         this.owner_name = dto.owner_name();
         this.owner_email = dto.owner_email();
         this.is_confirmed = dto.is_confirmed();
+        this.participantsList = dto.participantsList();
 
     }
 
-    public Trip(ParticipantsTripPayload dto) {
-        this.destination = dto.trip().getDestination();
-        this.starts_at = dto.trip().getStarts_at();
-        this.ends_at = dto.trip().getEnds_at();
-        this.owner_name = dto.trip().getOwner_name();
-        this.owner_email = dto.trip().getOwner_email();
-        this.is_confirmed = dto.trip().is_confirmed();
-        this.participantsList = dto.participants();
-    }
 }

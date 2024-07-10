@@ -21,9 +21,6 @@ public class ParticipantsController {
     @Autowired
     private ParticipantsService service;
 
-    @Autowired
-    private TripService tripService;
-
     @GetMapping("/all")
     public ResponseEntity findAll() {
         List<Participants> list = service.findAll();

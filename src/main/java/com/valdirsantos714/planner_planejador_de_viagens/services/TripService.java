@@ -1,5 +1,6 @@
 package com.valdirsantos714.planner_planejador_de_viagens.services;
 
+import com.valdirsantos714.planner_planejador_de_viagens.model.Participants;
 import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
 import com.valdirsantos714.planner_planejador_de_viagens.repositories.TripRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,8 +18,17 @@ public class TripService {
     @Autowired
     private TripRepository repository;
 
-    public Trip save(Trip trip) {
+    @Autowired
+    private ParticipantsService participantsService;
+
+    public Trip save(Trip trip, List<Participants> participantsList) {
         Trip newTrip = repository.save(trip);
+        participantsList.stream().forEach((p) -> p.setTrip(newTrip)); //Pega a lista e vincula essa trip a cada um desses participantes da lista
+        newTrip.setParticipantsList(participantsList); //Pega a viagem e muda a lista de participantes por essa lista
+        participantsService.saveAll(participantsList); //salva a lista de participantes
+        repository.save(newTrip); //Salva a viagem
+
+
         return newTrip;
     }
 
@@ -37,7 +47,8 @@ public class TripService {
             trip.setEnds_at(atualizedTrip.getEnds_at());
             trip.setOwner_name(atualizedTrip.getOwner_name());
             trip.setOwner_email(atualizedTrip.getOwner_email());
-            save(trip);
+            trip.setParticipantsList(atualizedTrip.getParticipantsList());
+            save(trip, trip.getParticipantsList());
             return trip;
         } else {
             throw new EntityNotFoundException("Trip not found!");
@@ -70,7 +81,7 @@ public class TripService {
         Trip trip = findById(id);
         if (trip.is_confirmed() == false) {
             trip.set_confirmed(true);
-            save(trip);
+            save(trip, trip.getParticipantsList());
             return trip;
         } else {
             throw new RuntimeException("Erro! a viagem já está confirmada!");
@@ -81,7 +92,7 @@ public class TripService {
         Trip trip = findById(id);
         if (trip.is_confirmed() == true) {
             trip.set_confirmed(false);
-            save(trip);
+            save(trip, trip.getParticipantsList());
             return trip;
         } else {
             throw new RuntimeException("Erro! a viagem já está confirmada!");

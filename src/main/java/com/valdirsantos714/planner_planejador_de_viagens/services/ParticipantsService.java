@@ -20,15 +20,19 @@ public class ParticipantsService {
     @Autowired
     private ParticipantsRepository repository;
 
-    @Autowired
-    private TripService tripService;
-
-    @Autowired
-    private TripRepository tripRepository;
 
     public Participants save(Participants participant) {
         Participants newParticipant = repository.save(participant);
         return newParticipant;
+    }
+
+    public List<Participants> saveAll(List<Participants> participantsList) {
+        if (participantsList.isEmpty()) {
+            throw new EntityNotFoundException("Erro! lista vazia");
+        } else {
+            repository.saveAll(participantsList);
+            return participantsList;
+        }
     }
 
     public Participants findById(UUID id) {
@@ -95,13 +99,17 @@ public class ParticipantsService {
         }
     }
 
-    public Trip cadastrarNaTrip(Trip trip, List<Participants> participant) {
-        Trip atualizedTrip = tripService.findById(trip.getId());
+    /*public Trip cadastrarNaTrip(UUID idTrip, UUID idParticipant) {
+        Trip atualizedTrip = tripService.findById(idTrip);
+        var participant = findById(idParticipant);
 
-        trip.setParticipantsList(participant);
+        atualizedTrip.getParticipantsList().add(participant);
+        participant.setTrip(atualizedTrip);
+
         tripService.save(atualizedTrip);
+        repository.save(participant);
 
         return atualizedTrip;
-    }
+    }*/
 
 }

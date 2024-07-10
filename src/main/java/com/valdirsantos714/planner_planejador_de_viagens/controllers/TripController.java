@@ -1,7 +1,6 @@
 package com.valdirsantos714.planner_planejador_de_viagens.controllers;
 
 import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.ParticipantsTripPayload;
 import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayload;
 import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayloadResponse;
 import com.valdirsantos714.planner_planejador_de_viagens.services.ParticipantsService;
@@ -47,7 +46,11 @@ public class TripController {
     public ResponseEntity save(@RequestBody @Valid TripPayload payload, UriComponentsBuilder uriBuilder) {
         var trip = new Trip(payload);
         var uri = uriBuilder.path("/trip/{id}").buildAndExpand(trip.getId()).toUri();
-        service.save(trip);
+
+        service.save(trip, payload.participantsList());
+        participantsService.saveAll(payload.participantsList());
+
+
         return ResponseEntity.created(uri).body(new TripPayloadResponse(trip));
     }
 
@@ -75,7 +78,7 @@ public class TripController {
         var trip = service.findById(id);
         if (trip != null) {
             service.confirmTrip(id);
-            service.save(trip);
+            service.save(trip, trip.getParticipantsList());
             return ResponseEntity.ok(new TripPayloadResponse(trip));
         } else {
             return ResponseEntity.notFound().build();
@@ -87,19 +90,7 @@ public class TripController {
         var trip = service.findById(id);
         if (trip != null) {
             service.cancelTrip(id);
-            service.save(trip);
-            return ResponseEntity.ok(new TripPayloadResponse(trip));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/{id}/cadastraNaTrip")
-    public ResponseEntity cadastraNaTrip(@PathVariable UUID id, @RequestBody @Valid ParticipantsTripPayload payload) {
-        var trip = service.findById(id);
-        if (trip != null) {
-            participantsService.cadastrarNaTrip(trip, payload.participants());
-            service.save(trip);
+            service.save(trip, trip.getParticipantsList());
             return ResponseEntity.ok(new TripPayloadResponse(trip));
         } else {
             return ResponseEntity.notFound().build();
