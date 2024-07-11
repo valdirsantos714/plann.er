@@ -20,7 +20,6 @@ public class ParticipantsService {
     @Autowired
     private ParticipantsRepository repository;
 
-
     public Participants save(Participants participant) {
         Participants newParticipant = repository.save(participant);
         return newParticipant;
@@ -98,18 +97,5 @@ public class ParticipantsService {
             throw new RuntimeException("Erro! a pessoa já está confirmada!");
         }
     }
-
-    /*public Trip cadastrarNaTrip(UUID idTrip, UUID idParticipant) {
-        Trip atualizedTrip = tripService.findById(idTrip);
-        var participant = findById(idParticipant);
-
-        atualizedTrip.getParticipantsList().add(participant);
-        participant.setTrip(atualizedTrip);
-
-        tripService.save(atualizedTrip);
-        repository.save(participant);
-
-        return atualizedTrip;
-    }*/
 
 }

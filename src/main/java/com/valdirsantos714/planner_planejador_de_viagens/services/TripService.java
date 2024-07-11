@@ -37,6 +37,33 @@ public class TripService {
         }
     }
 
+    public List<Participants> findAllParticipantsByIdTrip(UUID idTrip) {
+        var trip = findById(idTrip);
+        var list = trip.getParticipantsList();
+
+        if (list.isEmpty()) {
+            throw new EntityNotFoundException("Erro! A lista de participants está vazia");
+        } else {
+            return list;
+        }
+    }
+
+    public Participants saveParticipantsInTrip(UUID idTrip, Participants participant) {
+        var trip = findById(idTrip);
+
+        if (trip != null) {
+            trip.getParticipantsList().add(participant);
+            participant.setTrip(trip);
+
+            participantsService.save(participant);
+            save(trip, trip.getParticipantsList());
+            return participant;
+
+        } else {
+            throw new EntityNotFoundException("Erro! Trip não encontrada");
+        }
+    }
+
     public Trip findById(UUID id) {
         Trip trip = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Trip not found!"));
 

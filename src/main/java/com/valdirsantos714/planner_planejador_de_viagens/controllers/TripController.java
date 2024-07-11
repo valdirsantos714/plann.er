@@ -2,6 +2,7 @@ package com.valdirsantos714.planner_planejador_de_viagens.controllers;
 
 import com.valdirsantos714.planner_planejador_de_viagens.model.Activities;
 import com.valdirsantos714.planner_planejador_de_viagens.model.Links;
+import com.valdirsantos714.planner_planejador_de_viagens.model.Participants;
 import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
 import com.valdirsantos714.planner_planejador_de_viagens.payload.*;
 import com.valdirsantos714.planner_planejador_de_viagens.services.ActivitiesService;
@@ -107,6 +108,38 @@ public class TripController {
         }
     }
 
+    //Participants
+    @GetMapping("/{id}/participants")
+    public ResponseEntity findAllParticipants(@PathVariable(name = "id") UUID idTrip) {
+        var trip = service.findById(idTrip);
+
+        if (trip != null) {
+            List<Participants> list = service.findAllParticipantsByIdTrip(idTrip);
+            return ResponseEntity.ok(list.stream().map(ParticipantsPayloadResponse::new).toList());
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{id}/invite")
+    public ResponseEntity saveParticipantsTrip(@PathVariable(name = "id") UUID idTrip, @RequestBody @Valid ParticipantsPayload payload, UriComponentsBuilder uriBuilder) {
+        var trip = service.findById(idTrip);
+
+        if (trip != null) {
+            var uri = uriBuilder.path("/trip/{id}").buildAndExpand(trip.getId()).toUri();
+
+            service.save(trip, trip.getParticipantsList());
+            var participant = service.saveParticipantsInTrip(idTrip, new Participants(payload));
+
+            return ResponseEntity.created(uri).body(new ParticipantsPayloadResponse(participant));
+
+        } else {
+            throw new EntityNotFoundException("Trip não encontrada!");
+        }
+    }
+
+    //Activities
     @PostMapping("/{id}/activities")
     public ResponseEntity cadastrarActivities(@PathVariable(name = "id") UUID idTrip, @RequestBody ActivitiesPayload payload, UriComponentsBuilder uriBuilder) {
         var trip = service.findById(idTrip);
