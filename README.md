@@ -338,28 +338,3 @@ Plann.er é uma simples Api que permite o planejamento e gerenciamento de viagen
   ]
 }
 ```
-
----
-
-## Como Utilizar
-
-1. **Cadastrar uma Viagem**:
-    - Use o endpoint `POST /trips` com os detalhes da viagem e os e-mails dos convidados.
-    - O criador da viagem receberá um e-mail para confirmar a viagem.
-
-2. **Confirmar a Viagem**:
-    - O criador clica no link no e-mail para confirmar a viagem através do endpoint `GET /trips/{tripId}/confirm`.
-    - Os convidados receberão e-mails de confirmação de presença.
-
-3. **Confirmar Presença de um Participante**:
-    - Convidados clicam no link no e-mail de confirmação e usam o endpoint `POST /participants/{participantId}/confirm` para confirmar sua presença.
-
-4. **Adicionar Atividades e Links**:
-    - Na página do evento, use os endpoints `POST /trips/{tripId}/activities` e `POST /trips/{tripId}/links` para adicionar atividades e links importantes.
-
-5. **Consultar Detalhes**:
-    - Use os endpoints `GET /trips/{tripId}`, `GET /trips/{tripId}/participants`, `GET /trips/{tripId}/activities` e `GET /trips/{tripId}/links` para obter informações detalhadas sobre a viagem, participantes, atividades e links.
-
----
-
-Com essas funcionalidades, o Plann.er facilita o planejamento colaborativo de viagens, garantindo que todos os participantes estejam sempre informados e organizados.
