@@ -1,12 +1,11 @@
 package com.valdirsantos714.planner_planejador_de_viagens.controllers;
 
 import com.valdirsantos714.planner_planejador_de_viagens.model.Activities;
+import com.valdirsantos714.planner_planejador_de_viagens.model.Links;
 import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.ActivitiesPayload;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.ActivitiesPayloadResponse;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayload;
-import com.valdirsantos714.planner_planejador_de_viagens.payload.TripPayloadResponse;
+import com.valdirsantos714.planner_planejador_de_viagens.payload.*;
 import com.valdirsantos714.planner_planejador_de_viagens.services.ActivitiesService;
+import com.valdirsantos714.planner_planejador_de_viagens.services.LinksService;
 import com.valdirsantos714.planner_planejador_de_viagens.services.ParticipantsService;
 import com.valdirsantos714.planner_planejador_de_viagens.services.TripService;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,6 +30,9 @@ public class TripController {
 
     @Autowired
     private ActivitiesService activitiesService;
+
+    @Autowired
+    private LinksService linksService;
 
 
     @GetMapping("/all")
@@ -127,6 +129,33 @@ public class TripController {
         if (trip != null) {
             var lista = activitiesService.findAllByIdTrip(idTrip);
             return ResponseEntity.ok(lista.stream().map(ActivitiesPayloadResponse::new).toList());
+        } else {
+            throw new EntityNotFoundException("Erro trip não encontrada!");
+        }
+    }
+
+    @PostMapping("/{id}/links")
+    public ResponseEntity cadastrarLinks(@PathVariable(name = "id") UUID idTrip, @RequestBody LinksPayload payload, UriComponentsBuilder uriBuilder) {
+        var trip = service.findById(idTrip);
+
+        if (trip != null) {
+            Links links = linksService.save(idTrip, new Links(payload));
+            var uri = uriBuilder.path("/trip/{id}/activities").buildAndExpand(links.getId()).toUri();
+
+            return ResponseEntity.created(uri).body(new LinksPayloadResponse(links));
+        } else {
+            throw new EntityNotFoundException("Trip não encontrada!");
+        }
+    }
+
+    @GetMapping("/{id}/links")
+    public ResponseEntity verLinks(@PathVariable(name = "id") UUID idTrip){
+        var trip = service.findById(idTrip);
+
+        if (trip != null) {
+            var lista = linksService.findAllByIdTrip(idTrip);
+            return ResponseEntity.ok(lista.stream().map(LinksPayloadResponse::new).toList());
+
         } else {
             throw new EntityNotFoundException("Erro trip não encontrada!");
         }

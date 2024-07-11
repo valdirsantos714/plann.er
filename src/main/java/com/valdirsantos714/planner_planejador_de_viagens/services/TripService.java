@@ -84,7 +84,7 @@ public class TripService {
 
     public Trip confirmTrip(UUID id) {
         Trip trip = findById(id);
-        if (trip.is_confirmed() == false) {
+        if (!trip.is_confirmed()) {
             trip.set_confirmed(true);
             save(trip, trip.getParticipantsList());
             return trip;
@@ -95,7 +95,7 @@ public class TripService {
 
     public Trip cancelTrip(UUID id) {
         Trip trip = findById(id);
-        if (trip.is_confirmed() == true) {
+        if (trip.is_confirmed()) {
             trip.set_confirmed(false);
             save(trip, trip.getParticipantsList());
             return trip;
