@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record ActivitiesPayload(@NotNull(message = "Não pode deixar o title null") String title,
-                                LocalDateTime occurs_at,
+                                @NotNull(message = "Não pode deixar o title null") LocalDateTime occurs_at,
                                 Trip trip) {
 
     public ActivitiesPayload(Activities activities) {

@@ -113,14 +113,14 @@ public class TripController {
             Activities activities = activitiesService.save(idTrip, new Activities(payload));
             var uri = uriBuilder.path("/trip/{id}/activities").buildAndExpand(activities.getId()).toUri();
 
-            return ResponseEntity.created(uri).body(new ActivitiesPayload(activities));
+            return ResponseEntity.created(uri).body(new ActivitiesPayloadResponse(activities));
         } else {
             throw new EntityNotFoundException("Trip não encontrada!");
         }
 
     }
 
-    @GetMapping("/{id}/activities/all")
+    @GetMapping("/{id}/invites")
     public ResponseEntity verActivities(@PathVariable(name = "id") UUID idTrip){
         var trip = service.findById(idTrip);
 

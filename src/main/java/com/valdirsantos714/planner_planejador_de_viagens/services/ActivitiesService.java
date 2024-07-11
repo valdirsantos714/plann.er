@@ -26,12 +26,15 @@ public class ActivitiesService {
         var trip = tripService.findById(idTrip);
         trip.getActivitiesList().add(activities);
         activities.setTrip(trip); //Vincula a viagem com a activities
-        activities.setOccurs_at(LocalDateTime.now()); //Quando eu registrar a atividade ele pega a hora exata em que eu fiz a activity
+         //Quando eu registrar a atividade ele pega a hora exata em que eu fiz a activity
 
-        repository.save(activities);
-        tripService.save(trip, trip.getParticipantsList());
-
-        return activities;
+        if (activities.getOccurs_at().isBefore(trip.getStarts_at()) || activities.getOccurs_at().isAfter(trip.getEnds_at())) {
+            throw new RuntimeException("Erro data da activity está fora do intervalo de datas da viagem!");
+        } else {
+            repository.save(activities);
+            tripService.save(trip, trip.getParticipantsList());
+            return activities;
+        }
     }
 
     public List<Activities> findAllByIdTrip(UUID idTrip) {

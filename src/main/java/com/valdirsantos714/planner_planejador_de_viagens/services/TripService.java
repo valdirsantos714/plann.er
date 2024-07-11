@@ -22,14 +22,19 @@ public class TripService {
     private ParticipantsService participantsService;
 
     public Trip save(Trip trip, List<Participants> participantsList) {
-        Trip newTrip = repository.save(trip);
-        participantsList.stream().forEach((p) -> p.setTrip(newTrip)); //Pega a lista e vincula essa trip a cada um desses participantes da lista
-        newTrip.setParticipantsList(participantsList); //Pega a viagem e muda a lista de participantes por essa lista
-        participantsService.saveAll(participantsList); //salva a lista de participantes
-        repository.save(newTrip); //Salva a viagem
+        if (trip.getStarts_at().isAfter(trip.getEnds_at()) || trip.getEnds_at().isBefore(trip.getStarts_at())) {
+            throw new RuntimeException("Erro data da viagem está definida incorretamente!");
 
+        } else {
+            Trip newTrip = repository.save(trip);
+            participantsList.stream().forEach((p) -> p.setTrip(newTrip)); //Pega a lista e vincula essa trip a cada um desses participantes da lista
+            newTrip.setParticipantsList(participantsList); //Pega a viagem e muda a lista de participantes por essa lista
 
-        return newTrip;
+            participantsService.saveAll(participantsList); //salva a lista de participantes
+            repository.save(newTrip); //Salva a viagem
+
+            return newTrip;
+        }
     }
 
     public Trip findById(UUID id) {
