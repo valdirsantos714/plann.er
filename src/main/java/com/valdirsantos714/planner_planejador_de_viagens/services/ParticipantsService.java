@@ -1,15 +1,12 @@
 package com.valdirsantos714.planner_planejador_de_viagens.services;
 
 import com.valdirsantos714.planner_planejador_de_viagens.model.Participants;
-import com.valdirsantos714.planner_planejador_de_viagens.model.Trip;
 import com.valdirsantos714.planner_planejador_de_viagens.repositories.ParticipantsRepository;
-import com.valdirsantos714.planner_planejador_de_viagens.repositories.TripRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
